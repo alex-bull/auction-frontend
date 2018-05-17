@@ -52,8 +52,10 @@
 
           <table>
             <tr v-for="auction in auctions">
-              <td>{{ auction.title }}</td>
-              <td><router-link :to="{ name: 'auction', params: { id: auction.id }}">View</router-link></td>
+              <td><router-link :to="{ name: 'auction', params: { id: auction.id }}">
+                {{ auction.title }}
+              </router-link></td>
+              <td><img style="max-width:250px" v-bind:src="'http://localhost:4941/api/v1/auctions/' + auction.id + '/photos'"></td>
             </tr>
           </table>
 
