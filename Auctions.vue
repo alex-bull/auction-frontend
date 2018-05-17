@@ -5,7 +5,7 @@
         {{ error }}
       </div>
 
-      <div v-if="$route.params.id">
+      <div v-else-if="$route.params.id">
         <div id="auction">
           <router-link :to="{ name: 'auctions'}">Back to Listings</router-link>
 
@@ -19,16 +19,27 @@
               <td>Auction End</td>
               <td>Description</td>
               <td>Current Bid</td>
-              <td>Bid History</td>
             </tr>
             <tr>
-              <td>{{ getAuction($route.params.id).title }}</td>
-              <td></td>
-              <td>{{ new Date(getAuction($route.params.id).startDateTime).toUTCString() }}</td>
-              <td>{{ new Date(getAuction($route.params.id).endDateTime).toUTCString()}}</td>
-              <td></td>
-              <td>{{ getAuction($route.params.id).currentBid }}</td>
-              <td></td>
+              <td>{{ auction.title }}</td>
+              <td>{{ auction.seller.username }}</td>
+              <td>{{ new Date(auction.startDateTime).toUTCString() }}</td>
+              <td>{{ new Date(auction.endDateTime).toUTCString() }}</td>
+              <td>{{ auction.description }}</td>
+              <td>{{ auction.currentBid }}</td>
+            </tr>
+          </table>
+          <br />
+          <img style="max-width:400px" v-bind:src="'http://localhost:4941/api/v1/auctions/' + $route.params.id + '/photos'">
+          <br /><br />
+          <table>
+            <tr>
+              <td v-if="auction.bids[0]">Bid History:</td>
+              <td v-else>No bids placed</td>
+            </tr>
+            <tr v-for="bid in bids">
+              <td>{{ "Bid Amount: " + bid.amount + " &nbsp&nbspDate: " + new Date(bid.datetime).toUTCString() +
+                " &nbsp&nbspBuyerID: " + bid.buyerId + " &nbsp&nbspBuyer Username: " + bid.buyerUsername}}</td>
             </tr>
           </table>
         </div>
@@ -49,6 +60,10 @@
               {{category.categoryTitle}}
             </option>
           </select>
+
+          <br />
+
+          <input placeholder="Search" v-model="searchTerm" type="text" title="" v-on:keyup="getAuctions">
 
           <table>
             <tr v-for="auction in auctions">
@@ -72,16 +87,27 @@
       return{
         filterSelection: "All",
         categorySelection: "",
+        searchTerm: "",
         endpoint: "",
         error: "",
         errorFlag: false,
         auctions: [],
+        auction: "",
+        bids: "",
         categories: []
       }
     },
     mounted: function () {
       this.getAuctions();
       this.getCategories();
+      if(this.$route.params.id){
+        this.getAuction(this.$route.params.id);
+      }
+    },
+    updated : function () {
+      if(this.$route.params.id){
+        this.getAuction(this.$route.params.id);
+      }
     },
     methods: {
       getAuctions: function () {
@@ -92,11 +118,11 @@
         } else if (this.filterSelection === "Expired") {
           this.endpoint = 'http://localhost:4941/api/v1/auctions?status=expired';
         }
-        this.endpoint = this.endpoint.concat("&category-id=" + this.categorySelection);
+        this.endpoint = this.endpoint.concat("&category-id=" + this.categorySelection
+          + "&q=" + this.searchTerm);
         this.$http.get(this.endpoint)
           .then(function (response) {
             this.auctions = response.data;
-            this.auctions.sort();
           }, function (error) {
             this.error = error;
             this.errorFlag = true;
@@ -104,11 +130,14 @@
       },
 
       getAuction: function (id) {
-        for(let i = 0; i < this.auctions.length; i++){
-          if(this.auctions[i].id === id){
-            return this.auctions[i];
-          }
-        }
+        this.$http.get('http://localhost:4941/api/v1/auctions/' + id)
+          .then(function (response) {
+            this.auction = response.data;
+            this.bids = this.auction.bids.slice().reverse();
+          }, function (error) {
+            this.error = error;
+            this.errorFlag = true;
+          });
       },
 
       getCategories: function () {
