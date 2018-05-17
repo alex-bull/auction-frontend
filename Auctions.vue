@@ -1,6 +1,10 @@
 <template>
     <div>
 
+      <router-link :to="{ name: 'home'}">Home</router-link>
+
+      <br /><br /><br />
+
       <div v-if="errorFlag" style="color: red;">
         {{ error }}
       </div>

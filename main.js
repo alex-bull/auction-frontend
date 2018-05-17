@@ -2,6 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import Home from './Home.vue'
 import Auctions from './Auctions.vue';
+import Register from './Register.vue';
+import Login from './Login.vue';
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
@@ -14,6 +16,7 @@ Vue.http.options.emulateJSON = true;
 const routes = [
   {
       path: "/",
+      name: "home",
       component: Home
   },
   {
@@ -25,6 +28,16 @@ const routes = [
       path: "/auctions/:id",
       name: "auction",
       component : Auctions
+  },
+  {
+    path: "/register",
+    name: "register",
+    component : Register
+  },
+  {
+    path: "/login",
+    name: "login",
+    component : Login
   }
 ];
 
@@ -35,7 +48,7 @@ const router = new VueRouter({
 });
 
 
-let vm = new Vue({
+new Vue({
   el: '#app',
   router: router,
   render: h => h(App)
