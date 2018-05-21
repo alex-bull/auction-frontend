@@ -4,12 +4,53 @@
 
 
     <router-link :to="{ name: 'auctions' }">Auction Overview</router-link>
-
+    <br/>
     <router-link :to="{ name: 'register' }">Register</router-link>
+    <br/>
+    <div v-if="$root.$data.loggedInUser.id">
+      <a href="javascript:void(0);" v-on:click="logout">Logout</a>
+    </div>
+    <div v-else><router-link :to="{ name: 'login' }">Login</router-link></div>
+    <br/><br/>
 
-    <router-link :to="{ name: 'login' }">Login</router-link>
-
+    <div v-if="successFlag" style="color: red;">You have logged out successfully</div>
+    <div v-if="errorFlag" style="color: red;">Failed to log out</div>
 
 
   </div>
 </template>
+
+<script>
+  export default {
+    data() {
+      return {
+        userData: "",
+        error: "",
+        errorFlag: false,
+        successFlag: false,
+        username: "",
+        password: ""
+      }
+    },
+    mounted: function () {
+    },
+    methods: {
+      logout: function () {
+        this.$http.post("http://localhost:4941/api/v1/users/logout", '',
+          {headers: {'X-Authorization' : this.$root.$data.loggedInUser.token}})
+          .then(function () {
+            this.$root.$data.loggedInUser.id = null;
+            this.$root.$data.loggedInUser.token = null;
+            this.errorFlag = false;
+            this.successFlag = true;
+
+          }, function (error) {
+            this.error = error;
+            this.errorFlag = true;
+            this.successFlag = false;
+          });
+      }
+    }
+  }
+
+</script>

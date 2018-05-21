@@ -47,9 +47,11 @@ const router = new VueRouter({
   mode: 'history'
 });
 
-
 new Vue({
   el: '#app',
   router: router,
-  render: h => h(App)
+  render: h => h(App),
+  data: {
+    loggedInUser: Object
+  }
 });

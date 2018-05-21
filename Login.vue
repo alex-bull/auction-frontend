@@ -5,28 +5,30 @@
     <br /><br />
 
     <h1>Login</h1>
-    Username:
-    <input type="text" v-model="username" placeholder="Enter username">
-    <br /><br />
-    Password:
-    <input type="password" v-model="password" placeholder="Enter password">
-    <br /><br />
 
-    <input type="submit" v-on:click="req">
+      Username:
+      <input type="text" v-model="username" placeholder="Enter username">
+      <br /><br />
+      Password:
+      <input type="password" v-model="password" placeholder="Enter password">
+      <br /><br />
+
+      <input type="submit" v-on:click="req">
+
 
     <div v-if="errorFlag" style="color: red;">
       <br />
       Details provided do not match records.
+      {{reqBody()}}
       <br />
       Please check input.
     </div>
 
-    <div v-if="userData" style="color: red;" v>
+    <div v-if="userData" style="color: red;">
       <br />
       {{ redirect() }}
       Successfully logged in. Redirecting home...
     </div>
-
 
   </div>
 </template>
@@ -50,23 +52,17 @@
           .then(function (response) {
             this.errorFlag = false;
             this.userData = response.data;
+            this.$root.$data.loggedInUser = response.data;
           }, function (error) {
             this.error = error;
             this.errorFlag = true;
           });
       },
       reqBody: function () {
-        if(this.username.includes("@")){
-          return JSON.stringify({
-            email: this.username,
-            password: this.password
-          })
-        } else {
-          return JSON.stringify({
-            username: this.username,
-            password: this.password
-          })
-        }
+        return JSON.stringify({
+          username: this.username,
+          password: this.password
+        })
       },
       redirect: function () {
         let thisInstance = this;

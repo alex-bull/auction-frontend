@@ -6,23 +6,25 @@
     <br /><br />
 
     <h1>Register User</h1>
-    Username:
-    <input type="text" v-model="username" placeholder="Enter username">
-    <br /><br />
-    Given Name:
-    <input type="text" v-model="givenName" placeholder="Enter given name">
-    <br /><br />
-    Family Name:
-    <input type="text" v-model="familyName" placeholder="Enter family name">
-    <br /><br />
-    Email:
-    <input type="email" v-model="email" placeholder="Enter email">
-    <br /><br />
-    Password:
-    <input type="password" v-model="password" placeholder="Enter password">
-    <br /><br />
+    <form onsubmit="return false" v-on:submit="req">
+      Username:
+      <input type="text" v-model="username" placeholder="Enter username" pattern="\w+">
+      <br /><br />
+      Given Name:
+      <input type="text" v-model="givenName" placeholder="Enter given name" pattern="\w+">
+      <br /><br />
+      Family Name:
+      <input type="text" v-model="familyName" placeholder="Enter family name" pattern="\w+">
+      <br /><br />
+      Email:
+      <input type="email" v-model="email" placeholder="Enter email">
+      <br /><br />
+      Password:
+      <input type="password" v-model="password" placeholder="Enter password">
+      <br /><br />
 
-    <input type="submit" v-on:click="req">
+      <input type="submit">
+    </form>
 
     <div v-if="errorFlag" style="color: red;">
       <br />
