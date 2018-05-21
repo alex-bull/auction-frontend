@@ -31,7 +31,7 @@
       Please check input.
     </div>
 
-    <div v-if="userData" style="color: red;" v>
+    <div v-if="userData" style="color: red;">
       <br />
       {{ redirect() }}
       Successfully registered. Redirecting home...
@@ -59,12 +59,10 @@
     },
     methods: {
       req: function () {
-        console.log(this.reqBody());
-        this.$http.post("http://localhost:4941/api/v1/users", this.reqBody(), "application/json")
+        this.$http.post("http://localhost:4941/api/v1/users", this.reqBody())
           .then(function (response) {
             this.errorFlag = false;
             this.userData = response.data;
-            console.log("success");
           }, function (error) {
             this.error = error;
             this.errorFlag = true;
