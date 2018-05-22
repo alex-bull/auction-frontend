@@ -9,7 +9,7 @@
         {{ error }}
       </div>
 
-      <div v-else-if="$route.params.id">
+      <div v-if="$route.params.id">
         <div id="auction">
           <router-link :to="{ name: 'auctions'}">Back to Listings</router-link>
 
@@ -46,6 +46,16 @@
                 " &nbsp&nbspBuyerID: " + bid.buyerId + " &nbsp&nbspBuyer Username: " + bid.buyerUsername}}</td>
             </tr>
           </table>
+          <br/>
+          <form v-if="$root.$data.loggedInUser.id" onsubmit="return false" v-on:submit="bid(); bidErrorFlag = false;">
+            <input type="text" v-model="bidAmount" size="30"
+                   placeholder="Enter bid amount (in whole dollars)" pattern="[0-9]+">
+            <input type="submit">
+          </form>
+          <div v-if="bidErrorFlag" style="color: red;">
+            {{ "Please check that bid is higher than starting bid and current bid. " +
+            "And that auction has not expired" }}
+          </div>
         </div>
       </div>
 
@@ -94,10 +104,14 @@
         searchTerm: "",
         endpoint: "",
         error: "",
+        bidError: "",
         errorFlag: false,
+        bidErrorFlag : false,
+        response: "",
         auctions: [],
         auction: "",
         bids: "",
+        bidAmount: "",
         categories: []
       }
     },
@@ -151,6 +165,18 @@
           }, function (error) {
             this.error = error;
             this.errorFlag = true;
+          });
+      },
+      bid: function () {
+        this.$http.post("http://localhost:4941/api/v1/auctions/" + this.$route.params.id + "/bids" +
+          "?amount=" + this.bidAmount + "&id=" + this.$route.params.id, null,
+          {headers: {'X-Authorization' : this.$root.$data.loggedInUser.token}})
+          .then(function (response) {
+            this.bidErrorFlag = false;
+            this.response = response;
+          }, function (error) {
+            this.bidError = error;
+            this.bidErrorFlag = true;
           });
       }
     }
