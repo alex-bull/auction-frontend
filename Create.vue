@@ -6,8 +6,14 @@
 
     <br /><br />
 
+    <div v-if="!$root.$data.loggedInUser.id" style="color: red;">
+      <br />
+      {{ redirect() }}
+      You need to be logged in to use this. Redirecting home...
+    </div>
+
     <h1>Create Auction</h1>
-    <form onsubmit="return false" v-on:submit="req">
+    <form onsubmit="return false" v-on:submit="req()">
       Category ID:
       <input type="number" v-model="categoryId" placeholder="Enter categoryID">
       <br /><br />
@@ -29,20 +35,23 @@
       Starting Price:
       <input type="number" v-model="startingBid" placeholder="Enter start price">
       <br /><br />
+      Photo:
+      <input type="file" v-on:change="onFileChange" accept="image/jpeg, image/png">
+      <br /><br />
 
       <input type="submit">
     </form>
 
-    {{ reqBody() }}
     <div v-if="errorFlag" style="color: red;">
       <br />
-      Details provided entered incorrectly or not unique.
+      Details provided entered incorrectly.
       <br />
-      Please check input.
+      Please check input and that the date has not already passed.
     </div>
 
     <div v-if="userData" style="color: red;">
       <br />
+      {{ upload() }}
       {{ redirect() }}
       Successfully created. Redirecting home...
     </div>
@@ -64,7 +73,11 @@
         startDateTime: "",
         endDateTime: "",
         reservePrice: "",
-        startingBid: ""
+        startingBid: "",
+        imageError: "",
+        imageErrorFlag: false,
+        image: '',
+        reader: ''
       }
     },
     mounted: function () {
@@ -97,6 +110,27 @@
         setTimeout(function() {
           thisInstance.$router.push({name: 'home'})
         }, 2000);
+      },
+      upload: function () {
+        if(this.image) {
+          console.log("Uploading...");
+          this.$http.post("http://localhost:4941/api/v1/auctions/" + this.userData.id + "/photos",
+            this.image,
+            {emulateJSON: false, headers: {'X-Authorization': this.$root.$data.loggedInUser.token,
+              'Content-Type': this.image.type}})
+            .then(function (response) {
+              this.imageErrorFlag = false;
+              console.log("Success");
+            }, function (error) {
+              this.imageError = error;
+              this.imageErrorFlag = true;
+              console.log(error);
+            });
+        }
+      },
+      onFileChange: function () {
+        this.image = event.target.files[0];
+        console.log(this.image.type);
       }
     }
   }
