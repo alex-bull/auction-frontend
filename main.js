@@ -4,6 +4,7 @@ import Home from './Home.vue'
 import Auctions from './Auctions.vue';
 import Register from './Register.vue';
 import Login from './Login.vue';
+import Create from './Create.vue';
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
@@ -38,6 +39,11 @@ const routes = [
     path: "/login",
     name: "login",
     component : Login
+  },
+  {
+    path: "/create",
+    name: "create",
+    component : Create
   }
 ];
 

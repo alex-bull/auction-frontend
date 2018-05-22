@@ -5,12 +5,18 @@
 
     <router-link :to="{ name: 'auctions' }">Auction Overview</router-link>
     <br/>
-    <router-link :to="{ name: 'register' }">Register</router-link>
+    <router-link v-if="!$root.$data.loggedInUser.id" :to="{ name: 'register' }">Register</router-link>
     <br/>
     <div v-if="$root.$data.loggedInUser.id">
       <a href="javascript:void(0);" v-on:click="logout">Logout</a>
     </div>
-    <div v-else><router-link :to="{ name: 'login' }">Login</router-link></div>
+    <div v-if="!$root.$data.loggedInUser.id">
+      <router-link :to="{ name: 'login' }">Login</router-link>
+    </div>
+    <br/>
+    <div v-if="$root.$data.loggedInUser.id">
+      <router-link :to="{ name: 'create' }">Create Auction</router-link>
+    </div>
     <br/><br/>
 
     <div v-if="successFlag" style="color: red;">You have logged out successfully</div>
