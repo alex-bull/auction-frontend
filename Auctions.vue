@@ -62,7 +62,7 @@
           <div v-if="auction.seller.id === $root.$data.loggedInUser.id && auction.startDateTime > Date.now()">
             <br/>
             Edit Your Auction Details: <br/><br/>
-            <form onsubmit="return false" v-on:submit="req()">
+            <form onsubmit="return false" v-on:submit="patch">
               Category ID:
               <input type="number" v-model="categoryId" placeholder="Enter categoryID">
               <br /><br />
@@ -86,6 +86,9 @@
               <br /><br />
               Photo:
               <input type="file" v-on:change="onFileChange" accept="image/jpeg, image/png">
+              <br /><br />
+
+              <input type="button" value="Delete Current Photo" v-on:click="deletePhoto($route.params.id)">
               <br /><br />
 
               <input type="submit">
@@ -160,7 +163,8 @@
         startingBid: "",
         imageError: "",
         imageErrorFlag: false,
-        image: ''
+        image: '',
+        payload: {}
       }
     },
     mounted: function () {
@@ -228,6 +232,69 @@
       onFileChange: function () {
         this.image = event.target.files[0];
         console.log(this.image.type);
+      },
+      upload: function () {
+        if(this.image) {
+          console.log("Uploading...");
+          this.$http.post("http://localhost:4941/api/v1/auctions/" + this.$route.params.id + "/photos",
+            this.image,
+            {emulateJSON: false, headers: {'X-Authorization': this.$root.$data.loggedInUser.token,
+                'Content-Type': this.image.type}})
+            .then(function (response) {
+              this.imageErrorFlag = false;
+              console.log("Success");
+              this.$router.go(-1);
+            }, function (error) {
+              this.imageError = error;
+              this.imageErrorFlag = true;
+              console.log(error);
+            });
+        }
+      },
+      deletePhoto: function (id) {
+        this.$http.delete('http://localhost:4941/api/v1/auctions/' + id + '/photos',
+          {headers: {'X-Authorization': this.$root.$data.loggedInUser.token}})
+          .then(function (response) {
+            this.$router.go(-1);
+          }, function (error) {
+            this.error = error;
+          });
+      },
+      patch: function () {
+        this.payload = {};
+        if(this.categoryId){
+          this.payload.categoryId = parseInt(this.categoryId);
+        }
+        if(this.title){
+          this.payload.title = this.title;
+        }
+        if(this.description){
+          this.payload.description = this.description;
+        }
+        if(this.startDateTime){
+          this.payload.startDateTime = new Date(this.startDateTime).getTime();
+        }
+        if(this.endDateTime){
+          this.payload.endDateTime = new Date(this.endDateTime).getTime();
+        }
+        if(this.reservePrice){
+          this.payload.reservePrice = parseInt(this.reservePrice);
+        }
+        if(this.startingBid){
+          this.payload.startingBid = parseInt(this.startingBid);
+        }
+        console.log(JSON.stringify(this.payload));
+        this.payload = JSON.stringify(this.payload);
+        this.$http.patch('http://localhost:4941/api/v1/auctions/' + this.$route.params.id,
+          this.payload,
+          {headers: {'X-Authorization' : this.$root.$data.loggedInUser.token}})
+          .then(function (response) {
+            this.upload();
+            this.getAuction(this.$route.params.id);
+          }, function (error) {
+            this.error = error;
+            this.errorFlag = true;
+          });
       }
     }
   }

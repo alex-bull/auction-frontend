@@ -94,7 +94,6 @@
           this.payload,
           {headers: {'X-Authorization' : this.$root.$data.loggedInUser.token}})
           .then(function (response) {
-            this.user = response.data;
             this.getUser();
           }, function (error) {
             this.error = error;
