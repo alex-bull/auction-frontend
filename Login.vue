@@ -13,7 +13,7 @@
       <input type="password" v-model="password" placeholder="Enter password">
       <br /><br />
 
-      <input type="submit" v-on:click="req">
+      <input type="submit" v-on:click="req(); errorFlag=false">
 
 
     <div v-if="errorFlag" style="color: red;">

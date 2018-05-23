@@ -17,6 +17,8 @@
       <router-link :to="{ name: 'activeauctions' }">Your Active Auctions</router-link>
       <br/><br/>
       <router-link :to="{ name: 'completedauctions' }">Your Completed Auctions</router-link>
+      <br/><br/>
+      <router-link :to="{ name: 'unwonauctions' }">Your Un-Won/Expired Auctions</router-link>
     </div>
     <div v-if="!$root.$data.loggedInUser.id">
       <router-link :to="{ name: 'register' }">Register</router-link>

@@ -9,6 +9,7 @@ import WonAuctions from './WonAuctions.vue';
 import BidOnAuctions from './BidOnAuctions.vue';
 import ActiveOwnedAuctions from './ActiveOwnedAuctions.vue';
 import CompletedOwnedAuctions from './CompletedOwnedAuctions.vue';
+import UnwonOwnedAuctions from './UnwonOwnedAuctions.vue';
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
@@ -68,6 +69,11 @@ const routes = [
     path: "/completedauctions",
     name: "completedauctions",
     component: CompletedOwnedAuctions
+  },
+  {
+    path: "/unwonauctions",
+    name: "unwonauctions",
+    component: UnwonOwnedAuctions
   }
 ];
 
