@@ -26,7 +26,9 @@
             </tr>
             <tr>
               <td>{{ auction.title }}</td>
-              <td>{{ auction.seller.username }}</td>
+              <td><a href="JavaScript: void(0);" v-on:click="$router.push({name: 'user', params: {id: auction.seller.id}})">
+                {{ auction.seller.username }}
+              </a></td>
               <td>{{ new Date(auction.startDateTime).toUTCString() }}</td>
               <td>{{ new Date(auction.endDateTime).toUTCString() }}</td>
               <td>{{ auction.description }}</td>
@@ -59,7 +61,7 @@
         </div>
       </div>
 
-      <div v-else>
+      <div v-if="!$route.params.id">
         <div id="auctions">
 
           <select v-model="filterSelection" title="" v-on:change="getAuctions">

@@ -8,6 +8,8 @@
     <div v-if="$root.$data.loggedInUser.id">
       <a href="javascript:void(0);" v-on:click="logout">Logout</a>
       <br/><br/>
+      <router-link :to="{ name: 'user', params: { id: $root.$data.loggedInUser.id }}">Your Info</router-link>
+      <br/><br/>
       <router-link :to="{ name: 'create' }">Create Auction</router-link>
       <br/><br/>
       <router-link :to="{ name: 'wonauctions' }">Your Won Auctions</router-link>
