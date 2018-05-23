@@ -48,13 +48,10 @@
     },
     mounted: function () {
       this.getAuctions();
-      if(this.$route.params.id){
-        this.getAuction(this.$route.params.id);
-      }
     },
     methods: {
       getAuctions: function () {
-        this.endpoint = "http://localhost:4941/api/v1/auctions?bidder=" + this.$root.$data.loggedInUser.id;
+        this.endpoint = "http://localhost:4941/api/v1/auctions?status=active&bidder=" + this.$root.$data.loggedInUser.id;
         this.$http.get(this.endpoint, {headers: {'X-Authorization' : this.$root.$data.loggedInUser.token}})
           .then(function (response) {
             this.auctions = response.data;

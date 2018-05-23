@@ -48,9 +48,6 @@
     },
     mounted: function () {
       this.getAuctions();
-      if(this.$route.params.id){
-        this.getAuction(this.$route.params.id);
-      }
     },
     methods: {
       getAuctions: function () {
