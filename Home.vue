@@ -13,6 +13,8 @@
       <router-link :to="{ name: 'wonauctions' }">Your Won Auctions</router-link>
       <br/><br/>
       <router-link :to="{ name: 'bidonauctions' }">Your Bid-on Auctions</router-link>
+      <br/><br/>
+      <router-link :to="{ name: 'activeauctions' }">Your Active Auctions</router-link>
     </div>
     <div v-if="!$root.$data.loggedInUser.id">
       <router-link :to="{ name: 'register' }">Register</router-link>
