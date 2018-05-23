@@ -9,7 +9,7 @@
         {{ error }}
       </div>
 
-      <div v-if="$route.params.id">
+      <div v-if="$route.params.id && auction">
         <div id="auction">
           <a href="JavaScript: void(0);" v-on:click="$router.go(-1)">Back</a>
 
@@ -54,7 +54,7 @@
           </form>
           <div v-if="bidErrorFlag" style="color: red;">
             {{ "Please check that bid is higher than starting bid and current bid. " +
-            "And that auction has not expired" }}
+            "And that the auction is active" }}
           </div>
         </div>
       </div>
@@ -81,9 +81,10 @@
 
           <table>
             <tr v-for="auction in auctions">
-              <td><router-link :to="{ name: 'auction', params: { id: auction.id }}">
-                {{ auction.title }}
-              </router-link></td>
+              <td>
+                <a href="javascript:void(0);" v-on:click="getAuction(auction.id)">
+                  {{ auction.title }}
+                </a>
               <td><img style="max-width:250px" v-bind:src="'http://localhost:4941/api/v1/auctions/' + auction.id + '/photos'"></td>
             </tr>
           </table>
@@ -122,11 +123,6 @@
         this.getAuction(this.$route.params.id);
       }
     },
-    updated : function () {
-      if(this.$route.params.id){
-        this.getAuction(this.$route.params.id);
-      }
-    },
     methods: {
       getAuctions: function () {
         if (this.filterSelection === "All") {
@@ -152,6 +148,8 @@
           .then(function (response) {
             this.auction = response.data;
             this.bids = this.auction.bids.slice().reverse();
+            this.bidErrorFlag = false;
+            this.$router.push({ name: 'auction', params: { id: id }});
           }, function (error) {
             this.error = error;
             this.errorFlag = true;
@@ -174,6 +172,7 @@
           .then(function (response) {
             this.bidErrorFlag = false;
             this.response = response;
+            this.getAuction(this.$route.params.id);
           }, function (error) {
             this.bidError = error;
             this.bidErrorFlag = true;

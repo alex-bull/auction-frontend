@@ -1,7 +1,7 @@
 <template>
     <div>
 
-      <h1>Auctions You've Won</h1>
+      <h1>Auctions You've Bid On</h1>
 
       <router-link :to="{ name: 'home'}">Home</router-link>
 
@@ -54,7 +54,7 @@
     },
     methods: {
       getAuctions: function () {
-        this.endpoint = "http://localhost:4941/api/v1/my_won_auctions";
+        this.endpoint = "http://localhost:4941/api/v1/auctions?bidder=" + this.$root.$data.loggedInUser.id;
         this.$http.get(this.endpoint, {headers: {'X-Authorization' : this.$root.$data.loggedInUser.token}})
           .then(function (response) {
             this.auctions = response.data;

@@ -6,6 +6,7 @@ import Register from './Register.vue';
 import Login from './Login.vue';
 import Create from './Create.vue';
 import WonAuctions from './WonAuctions.vue';
+import BidOnAuctions from './BidOnAuctions.vue';
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
@@ -50,6 +51,11 @@ const routes = [
     path: "/wonauctions",
     name: "wonauctions",
     component: WonAuctions
+  },
+  {
+    path: "/bidonauctions",
+    name: "bidonauctions",
+    component: BidOnAuctions
   }
 ];
 
