@@ -19,7 +19,6 @@
     <div v-if="errorFlag" style="color: red;">
       <br />
       Details provided do not match records.
-      {{reqBody()}}
       <br />
       Please check input.
     </div>
