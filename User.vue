@@ -5,11 +5,9 @@
 
       <br /><br /><br />
 
-      <div v-if="errorFlag" style="color: red;">
-        {{ error }}
-      </div>
 
       <div v-if="!$root.$data.loggedInUser.id" style="color: red">
+        You must be logged in to view user profiles. Redirecting home...
         {{ redirect() }}
       </div>
 
@@ -104,7 +102,10 @@
           });
       },
       redirect: function () {
-        this.$router.push({name: 'home'});
+        let thisInstance = this;
+        setTimeout(function() {
+          thisInstance.$router.push({name: 'home'})
+        }, 2000);
       }
     }
   }
