@@ -26,14 +26,14 @@
               <td>Given Name</td>
               <td>Family Name</td>
               <td v-if="user.email">Email</td>
-              <td v-if="user.accountBalance">Account Balance</td>
+              <td v-if="user.email">Account Balance</td>
             </tr>
             <tr>
               <td>{{ user.username }}</td>
               <td>{{ user.givenName }}</td>
               <td>{{ user.familyName }}</td>
               <td v-if="user.email">{{ user.email }}</td>
-              <td v-if="user.accountBalance">{{ user.accountBalance }}</td>
+              <td v-if="user.email">{{ '$' + user.accountBalance }}</td>
             </tr>
           </table>
         </div>
