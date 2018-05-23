@@ -36,6 +36,15 @@
               <td v-if="user.email">{{ '$' + user.accountBalance }}</td>
             </tr>
           </table>
+          <div v-if="user.email">
+            <br/><br/>
+            Edit:<br/>
+            Given Name:
+            <input type="text" placeholder="Enter new given name" v-model="givenname"><br/>
+            Family Name:
+            <input type="text" placeholder="Enter new family name" v-model="familyname"><br/>
+            <input type="submit" v-on:click="patch">
+          </div>
         </div>
       </div>
 
@@ -51,7 +60,10 @@
         error: "",
         errorFlag: false,
         response: "",
-        user: ""
+        user: "",
+        payload: [],
+        familyname: "",
+        givenname: ""
       }
     },
     mounted: function () {
@@ -64,6 +76,28 @@
           {headers: {'X-Authorization' : this.$root.$data.loggedInUser.token}})
           .then(function (response) {
             this.user = response.data;
+          }, function (error) {
+            this.error = error;
+            this.errorFlag = true;
+          });
+      },
+      patch: function () {
+        this.errorFlag = false;
+        this.payload = {};
+        if(this.givenname){
+          this.payload.givenName = this.givenname;
+        }
+        if(this.familyname){
+          this.payload.familyName = this.familyname;
+        }
+        console.log(JSON.stringify(this.payload));
+        this.payload = JSON.stringify(this.payload);
+        this.$http.patch('http://localhost:4941/api/v1/users/' + this.$route.params.id,
+          this.payload,
+          {headers: {'X-Authorization' : this.$root.$data.loggedInUser.token}})
+          .then(function (response) {
+            this.user = response.data;
+            this.getUser();
           }, function (error) {
             this.error = error;
             this.errorFlag = true;
