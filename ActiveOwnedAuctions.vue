@@ -1,7 +1,7 @@
 <template>
     <div>
 
-      <h1>Your Active Actions</h1>
+      <h1>Your Ongoing Actions</h1>
 
       <router-link :to="{ name: 'home'}">Home</router-link>
 
@@ -21,10 +21,10 @@
 
         <table>
           <tr v-for="auction in auctions">
-            <td><router-link :to="{ name: 'auction', params: { id: auction.id }}">
+            <td v-if="auction.endDateTime > Date.now()"><router-link :to="{ name: 'auction', params: { id: auction.id }}">
               {{ auction.title }}
             </router-link></td>
-            <td><img style="max-width:250px" v-bind:src="'http://localhost:4941/api/v1/auctions/' + auction.id + '/photos'"></td>
+            <td v-if="auction.endDateTime > Date.now()"><img style="max-width:250px" v-bind:src="'http://localhost:4941/api/v1/auctions/' + auction.id + '/photos'"></td>
           </tr>
         </table>
 
@@ -51,7 +51,7 @@
     },
     methods: {
       getAuctions: function () {
-        this.endpoint = "http://localhost:4941/api/v1/auctions?status=active&seller=" + this.$root.$data.loggedInUser.id;
+        this.endpoint = "http://localhost:4941/api/v1/auctions?seller=" + this.$root.$data.loggedInUser.id;
         this.$http.get(this.endpoint, {headers: {'X-Authorization' : this.$root.$data.loggedInUser.token}})
           .then(function (response) {
             this.auctions = response.data;

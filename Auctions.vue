@@ -49,7 +49,7 @@
             </tr>
           </table>
           <br/>
-          <form v-if="$root.$data.loggedInUser.id" onsubmit="return false" v-on:submit="bid(); bidErrorFlag = false;">
+          <form v-if="$root.$data.loggedInUser.id && auction.seller.id !== $root.$data.loggedInUser.id " onsubmit="return false" v-on:submit="bid(); bidErrorFlag = false;">
             <input type="text" v-model="bidAmount" size="30"
                    placeholder="Enter bid amount (in whole dollars)" pattern="[0-9]+">
             <input type="submit">
@@ -58,6 +58,40 @@
             {{ "Please check that bid is higher than starting bid and current bid. " +
             "And that the auction is active" }}
           </div>
+
+          <div v-if="auction.seller.id === $root.$data.loggedInUser.id && auction.startDateTime > Date.now()">
+            <br/>
+            Edit Your Auction Details: <br/><br/>
+            <form onsubmit="return false" v-on:submit="req()">
+              Category ID:
+              <input type="number" v-model="categoryId" placeholder="Enter categoryID">
+              <br /><br />
+              Listing Name:
+              <input type="text" v-model="title" placeholder="Enter listing name">
+              <br /><br />
+              Description:
+              <input type="text" v-model="description" placeholder="Enter item description">
+              <br /><br />
+              Start Date/Time:
+              <input type="datetime-local" v-model="startDateTime" placeholder="Enter start date">
+              <br /><br />
+              End Date/Time:
+              <input type="datetime-local" v-model="endDateTime" placeholder="Enter end date">
+              <br /><br />
+              Reserve Price:
+              <input type="number" v-model="reservePrice" placeholder="Enter reserve price">
+              <br /><br />
+              Starting Price:
+              <input type="number" v-model="startingBid" placeholder="Enter start price">
+              <br /><br />
+              Photo:
+              <input type="file" v-on:change="onFileChange" accept="image/jpeg, image/png">
+              <br /><br />
+
+              <input type="submit">
+            </form>
+          </div>
+
         </div>
       </div>
 
@@ -115,7 +149,18 @@
         auction: "",
         bids: "",
         bidAmount: "",
-        categories: []
+        categories: [],
+
+        categoryId: "",
+        title: "",
+        description: "",
+        startDateTime: "",
+        endDateTime: "",
+        reservePrice: "",
+        startingBid: "",
+        imageError: "",
+        imageErrorFlag: false,
+        image: ''
       }
     },
     mounted: function () {
@@ -179,6 +224,10 @@
             this.bidError = error;
             this.bidErrorFlag = true;
           });
+      },
+      onFileChange: function () {
+        this.image = event.target.files[0];
+        console.log(this.image.type);
       }
     }
   }

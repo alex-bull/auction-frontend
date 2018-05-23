@@ -76,8 +76,7 @@
         startingBid: "",
         imageError: "",
         imageErrorFlag: false,
-        image: '',
-        reader: ''
+        image: ''
       }
     },
     mounted: function () {
