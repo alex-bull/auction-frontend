@@ -1,0 +1,92 @@
+<template>
+    <div>
+
+      <h1>Won Auctions</h1>
+
+      <router-link :to="{ name: 'home'}">Home</router-link>
+
+      <br />
+
+      <div v-if="errorFlag" style="color: red;">
+        {{ error }}
+      </div>
+
+      <div v-if="!$root.$data.loggedInUser.id">
+        {{ redirect() }}
+      </div>
+
+      <div id="auctions">
+
+        <br />
+
+        <table>
+          <tr v-for="auction in auctions">
+            <td><router-link :to="{ name: 'auction', params: { id: auction.id }}">
+              {{ auction.title }}
+            </router-link></td>
+            <td><img style="max-width:250px" v-bind:src="'http://localhost:4941/api/v1/auctions/' + auction.id + '/photos'"></td>
+          </tr>
+        </table>
+
+      </div>
+
+    </div>
+</template>
+
+
+<script>
+  export default {
+    data (){
+      return{
+        endpoint: "",
+        error: "",
+        bidError: "",
+        errorFlag: false,
+        bidErrorFlag : false,
+        response: "",
+        auctions: [],
+        auction: "",
+        bids: "",
+        bidAmount: "",
+        categories: []
+      }
+    },
+    mounted: function () {
+      this.getAuctions();
+      this.getCategories();
+      if(this.$route.params.id){
+        this.getAuction(this.$route.params.id);
+      }
+    },
+    updated : function () {
+      if(this.$route.params.id){
+        this.getAuction(this.$route.params.id);
+      }
+    },
+    methods: {
+      getAuctions: function () {
+        this.endpoint = "http://localhost:4941/api/v1/my_won_auctions";
+        this.$http.get(this.endpoint, {headers: {'X-Authorization' : this.$root.$data.loggedInUser.token}})
+          .then(function (response) {
+            this.auctions = response.data;
+          }, function (error) {
+            this.error = error;
+            this.errorFlag = true;
+          });
+      },
+      getAuction: function (id) {
+        this.$http.get('http://localhost:4941/api/v1/auctions/' + id)
+          .then(function (response) {
+            this.auction = response.data;
+            this.bids = this.auction.bids.slice().reverse();
+          }, function (error) {
+            this.error = error;
+            this.errorFlag = true;
+          });
+      },
+      redirect: function () {
+          this.$router.push({name: 'home'});
+      },
+    }
+  }
+</script>

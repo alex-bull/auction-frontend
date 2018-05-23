@@ -11,7 +11,7 @@
 
       <div v-if="$route.params.id">
         <div id="auction">
-          <router-link :to="{ name: 'auctions'}">Back to Listings</router-link>
+          <a href="JavaScript: void(0);" v-on:click="$router.go(-1)">Back</a>
 
           <br /><br />
 
