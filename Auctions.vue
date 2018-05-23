@@ -49,7 +49,7 @@
             </tr>
           </table>
           <br/>
-          <form v-if="$root.$data.loggedInUser.id && auction.seller.id !== $root.$data.loggedInUser.id " onsubmit="return false" v-on:submit="bid(); bidErrorFlag = false;">
+          <form v-if="$root.$data.loggedInUser.id && auction.seller.id !== $root.$data.loggedInUser.id && auction.endDateTime > Date.now()" onsubmit="return false" v-on:submit="bid(); bidErrorFlag = false;">
             <input type="text" v-model="bidAmount" size="30"
                    placeholder="Enter bid amount (in whole dollars)" pattern="[0-9]+">
             <input type="submit">
